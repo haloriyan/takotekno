@@ -126,13 +126,13 @@
         'color' => "bg-primary"
     ])
 
-    <div class="flex flex-wrap gap-8 mt-10">
+    {{-- <div class="flex flex-wrap gap-8 mt-10">
         @foreach ($posts as $post)
         <a href="{{ $post->link }}" target="_blank" class="flex flex-col basis-96 grow gap-4">
             <img src="{{ $post->featured_media_url}}" alt="{{ $post->title->rendered }}" class="rounded-lg aspect-video object-cover">
             <div>{{ $post->title->rendered }}</div>
         </a>
-        @endforeach
+        @endforeach --}}
     </div>
 </div>
 @endsection
