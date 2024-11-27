@@ -132,7 +132,7 @@
             <img src="{{ $post->featured_media_url}}" alt="{{ $post->title->rendered }}" class="rounded-lg aspect-video object-cover">
             <div>{{ $post->title->rendered }}</div>
         </a>
-        @endforeach --}}
-    </div>
+        @endforeach
+    </div> --}}
 </div>
 @endsection
