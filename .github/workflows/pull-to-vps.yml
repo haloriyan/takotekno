@@ -14,12 +14,14 @@ jobs:
       uses: actions/checkout@v3
 
     - name: Execute SSH Command on VPS
-      uses: appleboy/ssh-action@v0.1.7
+      uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.VPS_HOST }}
         username: ${{ secrets.VPS_USER }}
         password: ${{ secrets.VPS_PASSWORD }}
         port: ${{ secrets.VPS_PORT }}
         script: |
+	  "Connect to VPS with SSH"
           cd /home/workspace/takotekno
           git pull origin master
+	debug: true
