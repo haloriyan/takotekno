@@ -1,0 +1,40 @@
+version: '3'
+services:
+    application:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        image: ${IMAGE_NAME}
+        container_name: ${IMAGE_NAME}-${APP_ENV}-application
+        restart: unless-stopped
+        tty: true
+        environment:
+            SERVICE_NAME: ${IMAGE_NAME}-${APP_ENV}-application
+            SERVICE_TAGS: dev
+        working_dir: /var/www
+        volumes:
+            - ./:/var/www
+            - /var/www/vendor
+        networks:
+            - database-network
+            - proxy
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.${IMAGE_NAME}-${APP_ENV}.entrypoints=http"
+            - "traefik.http.routers.${IMAGE_NAME}-${APP_ENV}.rule=Host(`${APP_HOST}`)"
+            - "traefik.http.middlewares.${IMAGE_NAME}-${APP_ENV}-https-redirect.redirectscheme.scheme=https"
+            - "traefik.http.routers.${IMAGE_NAME}-${APP_ENV}.middlewares=${IMAGE_NAME}-${APP_ENV}-https-redirect"
+            - "traefik.http.routers.${IMAGE_NAME}-${APP_ENV}-secure.entrypoints=https"
+            - "traefik.http.routers.${IMAGE_NAME}-${APP_ENV}-secure.rule=Host(`${APP_HOST}`)"
+            - "traefik.http.routers.${IMAGE_NAME}-${APP_ENV}-secure.tls=true"
+            - "traefik.http.routers.${IMAGE_NAME}-${APP_ENV}-secure.tls.certresolver=http"
+            - "traefik.http.routers.${IMAGE_NAME}-${APP_ENV}-secure.service=${IMAGE_NAME}-${APP_ENV}"
+            - "traefik.http.services.${IMAGE_NAME}-${APP_ENV}.loadbalancer.server.port=9000"
+            - "traefik.docker.network=proxy"
+
+#Docker Networks
+networks:
+    database-network:
+        external: true
+    proxy:
+        external: true
