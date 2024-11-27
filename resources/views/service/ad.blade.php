@@ -74,5 +74,23 @@
     </div>
 </div>
 
+<div class="p-20 mobile:p-10 flex mobile:flex-col gap-20 mobile:gap-10">
+    <div class="flex flex-col gap-8 min-w-96 mobile:w-full">
+        <h3 class="text-4xl text-slate-700 font-medium">Pertanyaan Umum</h3>
+        <div class="text-slate-500 text-sm">Pertanyaan yang mungkin ingin Anda sampaikan</div>
+    </div>
+    <div class="flex flex-col gap-4 grow">
+        @foreach ($faqs as $f => $faq)
+            <div class="border rounded-xl p-6 flex flex-col gap-4 cursor-pointer" onclick="toggleFaq(this)">
+                <div class="flex items-center gap-4">
+                    <div class="flex grow text-slate-700">{{ $faq['question'] }}</div>
+                    <ion-icon name="chevron-down-outline"></ion-icon>
+                </div>
+                <div class="text-slate-500 text-sm {{ $f != 0 ? 'hidden' : ''}} faq-answer">{{ $faq['answer'] }}</div>
+            </div>
+        @endforeach
+    </div>
+</div>
+
 @include('components.cta')
 @endsection

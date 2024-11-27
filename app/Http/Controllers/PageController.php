@@ -17,13 +17,13 @@ class PageController extends Controller
         $this->wpUrl = env('WP_URL') . "/wp-json/wp/v2";
     }
     public function index() {
-        $posts = Http::get($this->wpUrl . "/posts", [
-            'per_page' => 12,
-        ])->body();
-        $posts = json_decode($posts, false);
+        // $posts = Http::get($this->wpUrl . "/posts", [
+        //     'per_page' => 12,
+        // ])->body();
+        // $posts = json_decode($posts, false);
 
         return view('index', [
-            'posts' => $posts,
+            // 'posts' => $posts,
         ]);
     }
     public function contact() {
@@ -96,12 +96,20 @@ class PageController extends Controller
 
         $faqs = [
             [
-                'question' => "Jika ditanya begini",
-                'answer' => "Jawabnya begitu",
+                'question' => "Saya punya pengalaman di mana programmer saya kabur. Bagaimana?",
+                'answer' => "Kami selalu bekerja secara profesional salah satunya dalam bentuk membuat MoU setiap sebelum pengerjaan projek. Sehingga jika terjadi wanprestasi dapat diajukan ke ranah hukum sesuai undang-undang yang berlaku.",
             ],
             [
-                'question' => "Kalau ditanya begitu",
-                'answer' => "Jawabnya begini",
+                'question' => "Apa yang perlu Saya siapkan sebelum proses pembuatan aplikasinya?",
+                'answer' => "Kami adalah pendengar yang baik. Ceritakan kepada kami apa yang ingin Anda capai. Dan setelah gambaran sistem disepakati, Anda dapat mengirimkan aset-aset yang diperlukan seperti grafis atau copywriting yang diperlukan.",
+            ],
+            [
+                'question' => "Berapa lama proses pengerjaannya?",
+                'answer' => "Kami tidak dapat memastikan tetapi untuk gambaran, satu modul biasanya memerlukan waktu 6 hingga 10 jam.",
+            ],
+            [
+                'question' => "Seandainya nanti kalau ada error bagaimana?",
+                'answer' => "Selama 3 bulan setelah serah-terima kami akan memperbaikinya untuk Anda secara gratis. Namun Anda akan tetap kena charge jika melebihi periode garansi atau ada penambahan baru.",
             ],
         ];
 
@@ -137,16 +145,32 @@ class PageController extends Controller
             ],
         ];
 
+        $faqs = [
+            [
+                'question' => "Berapa biaya yang sebenarnya saya butuhkan?",
+                'answer' => "Setiap produk memiliki demand yang berbeda, sehingga semakin tinggi demand atau persaingannya maka semakin besar biaya yang harus Anda keluarkan. Namun jika memang budget sangat terbatas, Anda tetap dapat menjalankan iklan dengan budget minimal Rp 50.000 per hari.",
+            ],
+            [
+                'question' => "Bagaimana saya bisa melihat laporannya dan apakah laporannya asli?",
+                'answer' => "Dalam setiap waktu tertentu kami akan membagikan tautan untuk melihat laporan performa kampanye yang dijalankan. Tautan dan laporan ini dibuat langsung oleh platform (Meta dan Google) sehingga Anda dapat melihatnya secara aktual. Anda juga dapat mengunduh ke Excel untuk keperluan kantor lainnya.",
+            ],
+            [
+                'question' => "Apa yang perlu saya siapkan?",
+                'answer' => "Informasi lengkap mengenai produk akan sangat membantu. Juga materi iklan berupa gambar atau video beserta caption.",
+            ],
+        ];
+
         return view('service.ad', [
             'types' => $types,
+            'faqs' => $faqs,
         ]);
     }
 
     public function blog() {
-        $posts = Http::get($this->wpUrl . "/posts", [
-            'per_page' => 12,
-        ])->body();
-        $posts = json_decode($posts, false);
+        // $posts = Http::get($this->wpUrl . "/posts", [
+        //     'per_page' => 12,
+        // ])->body();
+        // $posts = json_decode($posts, false);
 
         return view('blog', [
             'posts' => $posts,

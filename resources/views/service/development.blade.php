@@ -11,6 +11,11 @@
         <div class="leading-8  text-lg mobile:text-sm">
             Kami membantu bisnis Anda dalam menyederhanakan proses, meningkatkan efisiensi, dan menciptakan pengalaman pengguna yang maksimal.
         </div>
+        <div class="flex items-center gap-10 mobile:gap-6 text-2xl">
+            <ion-icon name="earth-outline"></ion-icon>
+            <ion-icon name="logo-android"></ion-icon>
+            <ion-icon name="logo-apple"></ion-icon>
+        </div>
     </div>
     <div class="flex grow"></div>
 </div>
@@ -116,7 +121,7 @@
 </div>
 
 <div class="p-20 mobile:p-10 flex mobile:flex-col gap-20 mobile:gap-10">
-    <div class="flex flex-col gap-8">
+    <div class="flex flex-col gap-8 min-w-96 mobile:w-full">
         <h3 class="text-4xl text-slate-700 font-medium">Pertanyaan Umum</h3>
         <div class="text-slate-500 text-sm">Pertanyaan yang mungkin ingin Anda sampaikan</div>
     </div>

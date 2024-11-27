@@ -51,10 +51,6 @@
                 <div class="flex grow">Home</div>
                 <ion-icon name="arrow-forward-outline"></ion-icon>
             </a>
-            <a href="{{ route('about') }}" class="py-4 text-2xl text-slate-500 flex items-center gap-4">
-                <div class="flex grow">Tentang</div>
-                <ion-icon name="arrow-forward-outline"></ion-icon>
-            </a>
             <div class="relative group">
                 <a href="#" class="py-4 text-2xl text-slate-500 flex items-center gap-4">
                     <div class="flex grow">Layanan</div>
@@ -64,7 +60,7 @@
                 <div class="hidden group-hover:flex flex-col gap-4 mt-2 mb-8">
                     <a href="{{ route('service.dev') }}" class="text-sm text-slate-500 flex items-center gap-4">
                         <ion-icon name="laptop-outline" class="text-2xl"></ion-icon>
-                        <div class="flex grow">Web & App Development</div>
+                        <div class="flex grow">Web & Mobile App Development</div>
                         <ion-icon name="arrow-forward-outline"></ion-icon>
                     </a>
                     <a href="{{ route('service.ad') }}" class="text-sm text-slate-500 flex items-center gap-4">
@@ -79,10 +75,14 @@
                     </a> --}}
                 </div>
             </div>
-            <a href="{{ route('blog') }}" class="py-4 text-2xl text-slate-500 flex items-center gap-4">
-                <div class="flex grow">Blog</div>
+            <a href="{{ route('about') }}" class="py-4 text-2xl text-slate-500 flex items-center gap-4">
+                <div class="flex grow">Tentang</div>
                 <ion-icon name="arrow-forward-outline"></ion-icon>
             </a>
+            {{-- <a href="{{ route('blog') }}" class="py-4 text-2xl text-slate-500 flex items-center gap-4">
+                <div class="flex grow">Blog</div>
+                <ion-icon name="arrow-forward-outline"></ion-icon>
+            </a> --}}
         </div>
 
         <a href="{{ route('contact') }}" class="bg-primary rounded-full w-full mt-10 p-4 text-white">
@@ -95,9 +95,6 @@
         <a href="{{ route('index') }}" class="h-12 flex items-center {{ $routeName == 'index' ? 'border-b border-primary text-primary' : 'text-slate-600'}}">
             Home
         </a>
-        <a href="{{ route('about') }}" class="h-12 flex items-center {{ $routeName == 'about' ? 'border-b border-primary text-primary' : 'text-slate-600'}}">
-            Tentang
-        </a>
         <div class="relative group">
             <a href="#" class="h-12 flex items-center gap-2 {{ in_array('service', explode('.', $routeName)) ? 'border-b border-primary text-primary' : 'text-slate-600'}}">
                 Layanan
@@ -106,7 +103,7 @@
             <div class="absolute hidden group-hover:flex flex-col bg-white shadow-lg rounded-md p-4 top-12 left-0 z-10">
                 <a href="{{ route('service.dev') }}" class="py-2 px-4 hover:bg-gray-100 rounded-md whitespace-nowrap text-sm text-slate-600 flex items-center gap-2">
                     <ion-icon name="laptop-outline"></ion-icon>
-                    Web Development
+                    Web & Mobile App Development
                 </a>
                 {{-- <a href="{{ route('service.content') }}" class="py-2 px-4 hover:bg-gray-100 rounded-md whitespace-nowrap text-sm text-slate-600 flex items-center gap-2">
                     <ion-icon name="create-outline"></ion-icon>
@@ -118,9 +115,12 @@
                 </a>
             </div>
         </div>
-        <a href="{{ route('blog') }}" class="h-12 flex items-center {{ $routeName == 'blog' ? 'border-b border-primary text-primary' : 'text-slate-600'}}">
-            Blog
+        <a href="{{ route('about') }}" class="h-12 flex items-center {{ $routeName == 'about' ? 'border-b border-primary text-primary' : 'text-slate-600'}}">
+            Tentang
         </a>
+        {{-- <a href="{{ route('blog') }}" class="h-12 flex items-center {{ $routeName == 'blog' ? 'border-b border-primary text-primary' : 'text-slate-600'}}">
+            Blog
+        </a> --}}
     </div>
     <div class="flex grow w-4/12 mobile:w-full justify-end mobile:hidden">
         <a href="{{ route('contact') }}" id="cta" class="bg-primary rounded-full p-4 mobile:p-2 px-8 mobile:px-4 text-white text-sm mobile:text-xs font-medium cursor-pointer">Hubungi Kami</a>
@@ -148,19 +148,19 @@
         </div>
         <div class="flex flex-col grow gap-2 mobile:w-full">
             <div class="text-slate-700 text-xl font-bold mb-4">Layanan</div>
-            <li class="list-none"><a href="{{ route('service.dev') }}" class="text-slate-500">Web & App Development</a></li>
+            <li class="list-none"><a href="{{ route('service.dev') }}" class="text-slate-500">Web & Mobile App Development</a></li>
             {{-- <li class="list-none"><a href="{{ route('service.content') }}" class="text-slate-500">Content Management</a></li> --}}
             <li class="list-none"><a href="{{ route('service.ad') }}" class="text-slate-500">Digital Ads Management</a></li>
         </div>
         <div class="flex flex-col grow gap-2 mobile:w-full">
             <div class="text-slate-700 text-xl opacity-0 font-bold">Kontak</div>
-            <a href="mailto:takotekno.com@gmail.com" class="flex items-center gap-4">
+            <a href="mailto:halo@takotekno.com" class="flex items-center gap-4">
                 <div class="text-primary text-4xl">
                     <ion-icon name="mail-outline"></ion-icon>
                 </div>
                 <div class="flex flex-col grow">
                     <div class="text-slate-700 font-bold">Email</div>
-                    <div class="text-slate-500 text-sm">takotekno.com@gmail.com</div>
+                    <div class="text-slate-500 text-sm">halo@takotekno.com</div>
                 </div>
             </diav>
             <a href="https://wa.me/6285159772902" target="_blank" class="flex items-center gap-4 mt-4">

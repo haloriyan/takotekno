@@ -23,7 +23,14 @@
             </div>
         </div>
 
-        <div class="text-primary mb-2 mobile:mt-8">Deskripsikan Kebutuhan Anda</div>
+        <div class="text-primary">Layanan</div>
+        <select name="layanan" required class="w-full bg-slate-200 h-16 px-6 outline-0 mt-2">
+            <option value="">Pilih Layanan</option>
+            <option value="App Development">App Development</option>
+            <option value="Digital Ads Management">Digital Ads Management</option>
+        </select>
+
+        <div class="text-primary mb-2 mt-4 mobile:mt-8">Deskripsikan Kebutuhan Anda</div>
         <textarea name="message" class="w-full bg-slate-200 outline-0 h-52"></textarea>
 
         @if ($message != "")
@@ -43,11 +50,11 @@
 <div class="p-20">
     <div class="text-2xl text-slate-600">atau Anda dapat menghubungi Kami di</div>
     <div class="flex gap-8 mt-10">
-        <a href="mailto:takotekno.com@gmail.com" class="shadow-lg p-8 rounded-xl flex flex-1 items-center gap-8">
+        <a href="mailto:halo@takotekno.com" class="shadow-lg p-8 rounded-xl flex flex-1 items-center gap-8">
             <ion-icon name="mail-outline" class="text-4xl"></ion-icon>
             <div class="flex flex-col gap-2">
                 <div class="text-slate-700 font-medium">Email</div>
-                <div class="text-sm text-slate-500">takotekno.com@gmail.com</div>
+                <div class="text-sm text-slate-500">halo@takotekno.com</div>
             </div>
         </a>
         <a href="https://wa.me/6285159772902" class="shadow-lg p-8 rounded-xl flex flex-1 items-center gap-8">
