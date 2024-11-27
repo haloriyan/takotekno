@@ -13,6 +13,10 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
+    - name: Debug Secrets
+      run: |
+        echo "VPS_HOST: ${{ secrets.VPS_HOST }}"
+
     - name: Execute SSH Command on VPS
       uses: appleboy/ssh-action@master
       with:
