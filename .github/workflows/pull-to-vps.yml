@@ -21,7 +21,8 @@ jobs:
         password: ${{ secrets.VPS_PASSWORD }}
         port: ${{ secrets.VPS_PORT }}
         script: |
-	  "Connect to VPS with SSH"
+          echo "Connect to VPS with SSH"
           cd /home/workspace/takotekno
           git pull origin master
-	debug: true
+        debug: true
+
