@@ -171,9 +171,20 @@ class PageController extends Controller
         //     'per_page' => 12,
         // ])->body();
         // $posts = json_decode($posts, false);
+        $posts = [];
 
         return view('blog', [
             'posts' => $posts,
         ]);
+    }
+
+    public function sekolah() {
+        return view('sekolah.index');
+    }
+    public function webSekolah() {
+        return view('sekolah.web');
+    }
+    public function ppdb() {
+        return view('sekolah.ppdb');
     }
 }
