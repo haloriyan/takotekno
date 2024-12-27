@@ -55,12 +55,12 @@
 @endphp
     
 @section('content')
-<div class="bg-primary text-white p-20 py-56 mobile:p-10 mobile:py-36 flex gap-20 relative">
+<div class="bg-primary text-white p-20 py-56 mobile:p-10 mobile:py-36 flex mobile:flex-col-reverse gap-20 mobile:gap-10 relative">
     <div class="w-7/12 mobile:w-full flex flex-col gap-6">
-        <h2 class="text-4xl mobile:text-xl mobile:leading-10 font-medium">
+        <h2 class="text-4xl mobile:text-lg mobile:text-xl mobile:leading-10 font-medium">
             Penerimaan Siswa Baru yang Lebih Efisien
         </h2>
-        <div class="leading-8  text-lg mobile:text-sm">
+        <div class="leading-8 mobile:leading-6 text-lg mobile:text-sm">
             Kurangi Beban Administratif dan Tingkatkan Akurasi Data dengan Sistem PPDB Terbaik. Dapatkan Pendaftaran Siswa Baru yang Mudah dan Efisien Sekarang!
         </div>
         <div class="flex items-center gap-6 mobile:gap-6 text-2xl">
@@ -72,7 +72,7 @@
             </a>
         </div>
     </div>
-    <img src="{{ asset('images/ppdb/desktop.png') }}" alt="illus" class="w-5/12">
+    <img src="{{ asset('images/ppdb/desktop.png') }}" alt="illus" class="w-5/12 mobile:w-full">
 </div>
 
 <div class="mt-10"></div>

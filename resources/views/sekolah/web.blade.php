@@ -92,7 +92,7 @@
 @endphp
     
 @section('content')
-<div class="bg-primary text-white p-20 py-56 mobile:p-10 mobile:py-36 flex gap-20 relative">
+<div class="bg-primary text-white p-20 py-56 mobile:p-10 mobile:py-36 flex mobile:flex-col-reverse gap-20 mobile:gap-10 relative">
     <div class="w-7/12 mobile:w-full flex flex-col gap-6">
         <h2 class="text-4xl mobile:text-xl mobile:leading-10 font-medium">
             Tampil Lebih Inovatif dengan Website
@@ -109,7 +109,7 @@
             </a>
         </div>
     </div>
-    <img src="{{ asset('images/ppdb/desktop.png') }}" alt="illus" class="w-5/12">
+    <img src="{{ asset('images/ppdb/desktop.png') }}" alt="illus" class="w-5/12 mobile:w-full">
 </div>
 
 <div class="p-20 mobile:p-10 flex flex-col gap-4 py-36 items-center mobile:items-start">
@@ -176,18 +176,18 @@
 </div>
 
 <div class="p-20 mobile:p-10">
-    <div class="bg-[#5a4d70] text-white rounded-xl p-10 flex mobile:flex-col gap-10">
-        <div class="flex flex-col grow gap-4 p-10">
-            <h3 class="text-xl font-medium leading-10">Tingkatkan Mutu Layanan Pendidikan dan Buat Sekolah Anda Selangkah Lebih Maju Dengan Menerapkan Digitalisasi bersama TakoTekno</h3>
+    <div class="bg-[#5a4d70] text-white rounded-xl p-10 flex mobile:flex-col-reverse gap-10">
+        <div class="flex flex-col grow gap-4 p-10 mobile:p-0">
+            <h3 class="text-xl mobile:text-lg font-medium leading-10 mobile:leading-8">Tingkatkan Mutu Layanan Pendidikan dan Buat Sekolah Anda Selangkah Lebih Maju Dengan Menerapkan Digitalisasi bersama TakoTekno</h3>
             <div class="flex mt-4">
                 <a 
-                    href="https://wa.me/6285159772902?text={{ urlencode('Halo, TakoTekno. Saya [NAMA_ANDA] dari [NAMA_SEKOLAH] ingin dibantu untuk membuat aplikasi Web Sekolah') }}" 
+                    href="https://wa.me/6285159772902?text={{ urlencode('Halo, TakoTekno. Saya [NAMA_ANDA] dari [NAMA_SEKOLAH] ingin dibantu untuk membuat aplikasi [NAMA_APLIKASI]') }}" 
                     class="p-3 px-6 rounded-full border border-white font-bold text-sm bg-white text-primary">
                     Hubungi Kami
                 </a>
             </div>
         </div>
-        <img src="{{ asset('images/scrolling.gif') }}" alt="Laptop" class="h-64 rounded-xl">
+        <img src="{{ asset('images/scrolling.gif') }}" alt="Laptop" class="h-64 mobile:w-auto rounded-xl">
     </div>
 </div>
 
