@@ -1,6 +1,17 @@
 @extends('layouts.page')
 
-@section('title', "IT untuk Sekolah - ")
+@section('title', "Edupackage - ")
+
+@section('head')
+<meta name="title" content="Edupackage - TakoTekno" />
+<meta name="description" content="Kurangi stres administratif dengan digitalisasi teknologi. Tampil lebih inovatif dan gaet lebih banyak calon siswa." />
+
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://takotekno.com/sekolah" />
+<meta property="og:title" content="Edupackage - TakoTekno" />
+<meta property="og:description" content="Kurangi stres administratif dengan digitalisasi teknologi. Tampil lebih inovatif dan gaet lebih banyak calon siswa." />
+<meta property="og:image" content="{{ asset('images/Cover-Sekolah.png') }} />
+@endsection
 
 @php
     $products = [
