@@ -20,14 +20,14 @@
             'description' => "Tampilkan informasi sekolah mulai dari kontak, jurusan, ekstrakurikuler, galeri, hingga guru dan ketenagakerjaan",
             'link' => route('page.webSekolah'),
             'demo' => "https://sekolah.takotekno.com",
-            'image' => "Web-Sekolah.png"
+            'image' => "Web-Sekolah-prev.png"
         ],
         [
             'name' => "Aplikasi PPDB",
             'link' => route('page.ppdb'),
             'description' => "Manage data penerimaan siswa dan terima pembayaran online untuk biaya pendaftaran siswa baru.",
             'demo' => "https://ppdb.takotekno.com",
-            'image' => "PPDB.png"
+            'image' => "PPDB-prev.png"
         ]
     ];
     $whys = [
