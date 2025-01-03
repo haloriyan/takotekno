@@ -187,4 +187,10 @@ class PageController extends Controller
     public function ppdb() {
         return view('sekolah.ppdb');
     }
+    public function ContactWa(Request $request) {
+        $message = "Halo, TakoTekno. Saya " . $request->name . " dari " . $request->school;
+        $message .= " ingin dibantu untuk membuat aplikasi " . $request->app;
+
+        return redirect("https://wa.me/6285159772902?text=" . urlencode($message));
+    }
 }

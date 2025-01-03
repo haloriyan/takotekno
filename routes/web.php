@@ -13,6 +13,7 @@ Route::group(['prefix' => "sekolah"], function () {
     Route::get('web-sekolah', [PageController::class, 'webSekolah'])->name('page.webSekolah');
     Route::get('/', [PageController::class, 'sekolah'])->name('page.sekolah');
 });
+Route::post('contact-wa', [PageController::class, 'ContactWa'])->name('ContactWa');
 
 Route::group(['prefix' => "layanan"], function () {
     Route::get('/dev', [PageController::class, 'serviceDev'])->name('service.dev');

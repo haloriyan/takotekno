@@ -176,6 +176,8 @@
     </footer>
 </div>
 
+@yield('ModalArea')
+
 <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
 <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 <script>
@@ -236,6 +238,9 @@
                 headerMenuMobile.classList.toggle('hidden');
             }, 400);
         }
+    }
+    const toggleHidden = target => {
+        select(target).classList.toggle('hidden');
     }
 </script>
 @yield('javascript')
