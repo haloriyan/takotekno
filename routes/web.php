@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AgeController;
 use App\Http\Controllers\PageController;
 use Illuminate\Support\Facades\Route;
 
@@ -24,3 +25,18 @@ Route::group(['prefix' => "layanan"], function () {
 
 Route::get('hubungi-kami', [PageController::class, 'contact'])->name('contact');
 Route::post('hubungi-kami/submit', [PageController::class, 'contactSubmit'])->name('contact.submit');
+
+Route::group(['prefix' => "age"], function () {
+    Route::get('/', [AgeController::class, 'index'])->name('age.index');
+    Route::get('about', [AgeController::class, 'about'])->name('age.about');
+    Route::get('clients', [AgeController::class, 'client'])->name('age.client');
+    Route::get('contact-us', [AgeController::class, 'contact'])->name('age.contact');
+
+    Route::group(['prefix' => "service"], function () {
+        Route::get('event-management', [AgeController::class, 'eventManagement'])->name('age.service.eventManagement');
+        Route::get('production', [AgeController::class, 'production'])->name('age.service.production');
+        Route::get('advertising', [AgeController::class, 'advertising'])->name('age.service.advertising');
+        Route::get('event-equipment', [AgeController::class, 'eventEquipment'])->name('age.service.eventEquipment');
+        Route::get('procurement-goods', [AgeController::class, 'procurementGoods'])->name('age.service.procurementGoods');
+    });
+});

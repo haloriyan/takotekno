@@ -67,7 +67,7 @@
 @section('content')
 <div class="bg-primary text-white p-20 py-56 mobile:p-10 mobile:py-36 flex mobile:flex-col-reverse gap-20 mobile:gap-10 relative">
     <div class="w-7/12 mobile:w-full flex flex-col gap-6">
-        <h2 class="text-4xl mobile:text-xl mobile:leading-10 font-medium">
+        <h2 class="text-5xl leading-[64px] mobile:text-xl mobile:leading-10 font-bold">
             Layanan Digitalisasi Sekolah Terbaik
         </h2>
         <div class="leading-8  text-lg mobile:text-sm">
@@ -77,16 +77,16 @@
             <a href="https://wa.me/6285159772902?text={{ urlencode('Halo, TakoTekno. Saya [NAMA_ANDA] dari [NAMA_SEKOLAH] ingin dibantu untuk membuat aplikasi [NAMA_APLIKASI]') }}" class="p-3 px-6 rounded border border-white font-medium text-sm bg-white text-primary">
                 Hubungi Kami
             </a>
-            <a href="#" class="p-3 px-6 rounded border border-white font-medium text-sm">
-                Dapatkan Penawaran
-            </a>
+            <div class="p-3 px-6 rounded border border-white font-medium text-sm cursor-pointer" onclick="gulir('#more')">
+                Pelajari
+            </div>
         </div>
     </div>
     {{-- <div class="flex grow"></div> --}}
     <img src="{{ asset('images/illus-sekolah.png') }}" alt="illus" class="w-5/12 mobile:w-full">
 </div>
 
-<div class="p-20 mobile:p-10 flex flex-col gap-4 items-center mobile:items-start">
+<div class="p-20 mobile:p-10 flex flex-col gap-4 items-center mobile:items-start" id="scrollTarget">
     <h3 class="text-3xl text-primary font-medium">Hadir Sesuai Kebutuhan Sekolah Anda</h3>
     <p class="text-slate-600">Kami berusaha menjawab tantangan dalam memberikan pelayanan pendidikan dengan sentuhan teknologi</p>
 

@@ -251,6 +251,12 @@
     const toggleHidden = target => {
         select(target).classList.toggle('hidden');
     }
+    const scrollTo = (target, block = 'start') => {
+        select(target).scrollIntoView({
+            behavior: 'smooth',
+            block: block,
+        })
+    }
 </script>
 @yield('javascript')
 

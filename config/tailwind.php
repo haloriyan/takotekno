@@ -19,7 +19,8 @@ return [
                 'desktop' => ['min' => '1024px'],
             ],
             'colors' => [
-                'primary' => "#675a7d",
+                // 'primary' => "#675a7d",
+                'primary' => "#1D89AD",
                 'primary-transparent' => "#ded5ed",
             ]
         ]
