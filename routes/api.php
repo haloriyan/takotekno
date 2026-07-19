@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CmsController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\PosController;
 use App\Http\Controllers\ProductController;
@@ -18,6 +19,13 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::get('plan', [UserController::class, 'plan']);
+
+Route::group(['prefix' => "v2"], function () {
+    Route::get('tes', [CmsController::class, 'tes']);
+    Route::post('home', [CmsController::class, 'home']);
+    Route::post('preparation', [CmsController::class, 'preparation']);
+    Route::post('store', [CmsController::class, 'store']);
+});
 
 Route::group(['prefix' => 'user'], function () {
     Route::post('login', [UserController::class, 'login']);
@@ -90,6 +98,7 @@ Route::group(['prefix' => 'store'], function () {
             Route::get('sales', [StoreController::class, 'salesReport']);
             Route::get('sales/{id}/detail', [SalesController::class, 'detail']);
             Route::get('movement', [StoreController::class, 'movementReport']);
+            Route::get('movement-detail/{productID}', [StoreController::class, 'movementReportDetail']);
         });
     });
 });

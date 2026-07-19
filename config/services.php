@@ -35,4 +35,13 @@ return [
         ],
     ],
 
+    'gemini' => [
+        'keys' => [
+            "AIzaSyAiYqCrudnSLyvk5lBHJeVugmS2KCPktr4",
+            "AIzaSyBkzCdj4qZATTK1QrixtgeidwAQjdLJeOA",
+            "AIzaSyDavuAK9rkUqPoHM0OG86uz79P16VJwTXQ",
+            "AIzaSyA-PpAHqx7SMCgKH4vwpJTcJf2FZe0-BPw"
+        ]
+    ],
+
 ];

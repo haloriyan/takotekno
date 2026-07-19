@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Customer;
 use App\Models\Product;
 use App\Models\Sales;
+use App\Models\StockMovement;
 use App\Models\StockMovementItem;
 use App\Models\Store;
 use App\Models\StorePlan;
@@ -217,6 +218,39 @@ class StoreController extends Controller
 
         return response()->json([
             'products' => $products,
+        ]);
+    }
+    public function movementReportDetail(Request $request, $productID) {
+        $startDate = Carbon::parse($request->start_date)->startOfDay();
+        $endDate = Carbon::parse($request->end_date)->endOfDay();
+        $user = $request->user();
+        $storeID = $user->access->store_id;
+
+        $movements = StockMovementItem::where('product_id', $productID)
+            ->where('stock_movement_items.store_id', $storeID)
+            ->join('stock_movements', 'stock_movements.id', '=', 'stock_movement_items.movement_id')
+            ->whereBetween('stock_movements.created_at', [$startDate, $endDate])
+            ->selectRaw("
+                DATE(stock_movements.created_at) as date,
+                SUM(CASE WHEN stock_movements.type = 'IN' THEN stock_movement_items.quantity ELSE 0 END) as in_qty,
+                SUM(CASE WHEN stock_movements.type = 'OUT' THEN stock_movement_items.quantity ELSE 0 END) as out_qty,
+                SUM(CASE WHEN stock_movements.type = 'OPN' THEN stock_movement_items.quantity ELSE 0 END) as opn_qty
+            ")
+            ->groupBy('date')
+            ->orderBy('date', 'DESC')
+            ->get();
+
+        $data = $movements->map(function ($item) {
+            return [
+                'date' => $item->date,
+                'in' => (int)$item->in_qty,
+                'out' => (int)$item->out_qty,
+                'opn' => (int)$item->opn_qty,
+            ];
+        });
+
+        return response()->json([
+            'movements' => $data,
         ]);
     }
 }

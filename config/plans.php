@@ -5,7 +5,7 @@ return [
         'label' => 'Basic',
         'price' => 0,
         'produk' => 10,
-        'transaksi' => '100',
+        'transaksi' => 100,
         'karyawan' => 0,
         'laporan' => false,
         'absensi' => false,
