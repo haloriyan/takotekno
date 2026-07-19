@@ -7,6 +7,9 @@
 @endsection
 
 @section('javascript')
+<script>
+    let KEYS = @json(config('services.gemini.keys'));
+</script>
 <script src="/js/Gemini.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>

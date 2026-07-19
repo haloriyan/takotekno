@@ -27,11 +27,6 @@ const Gemini = async (prompt, temp = 1.8, capability = 'text') => {
             responseModalities: ['IMAGE', 'TEXT']
         };
     }
-    
-    let KEYS = [
-        "AQ.Ab8RN6IBUq6klGTQpHKIHNeDC9xGr2MBCJcUah0RRCjEizwHGA",
-        "AQ.Ab8RN6LsylxuU-OSvI3jfMHI0d0YbCjSJj8A3-6fofkH0VCeRw"
-    ];
 
     for (let keyIndex = 0; keyIndex < KEYS.length; keyIndex++) {
         const apiKey = KEYS[keyIndex];

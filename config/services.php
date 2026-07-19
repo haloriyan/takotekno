@@ -37,6 +37,8 @@ return [
 
     'gemini' => [
         'keys' => [
+            "AQ.Ab8RN6IBUq6klGTQpHKIHNeDC9xGr2MBCJcUah0RRCjEizwHGA",
+            "AQ.Ab8RN6LsylxuU-OSvI3jfMHI0d0YbCjSJj8A3-6fofkH0VCeRw",
             "AIzaSyAiYqCrudnSLyvk5lBHJeVugmS2KCPktr4",
             "AIzaSyBkzCdj4qZATTK1QrixtgeidwAQjdLJeOA",
             "AIzaSyDavuAK9rkUqPoHM0OG86uz79P16VJwTXQ",
