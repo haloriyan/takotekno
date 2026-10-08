@@ -1,0 +1,296 @@
+import React, { useEffect, useRef, useState } from "react";
+import { Dimensions, RefreshControl, ScrollView, StyleSheet, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { Button, COLORS, Dialog, Inline, Text } from "ripal-ui";
+import useUser from "../../hooks/useUser";
+import { Ionicons } from "@expo/vector-icons";
+import dayjs from "dayjs";
+import relativeTime from 'dayjs/plugin/relativeTime';
+import DateTimePicker, { useDefaultStyles } from "react-native-ui-datepicker";
+import axios from "axios";
+import config from "../../config";
+import Currency from "../../lib/Currency";
+import { useIsFocused } from "@react-navigation/native";
+
+dayjs.extend(relativeTime);
+dayjs.locale('id');
+
+const CashierHome = ({ navigation, route }) => {
+    const [scroll, setScroll] = useState(0);
+    const scrollRef = useRef(0);
+    const [top, setTop] = useState(-100);
+    const [user] = useUser();
+    const pickerDefaultStyles = useDefaultStyles();
+
+    const [showCalendar, setShowCalendar] = useState(false);
+    const [date, setDate] = useState(dayjs());
+    const [omset, setOmset] = useState(0);
+    const [margin, setMargin] = useState(0);
+    const [volume, setVolume] = useState(0);
+    const [sales, setSales] = useState([]);
+    const [raw, setRaw] = useState(null);
+    const [page, setPage] = useState(1);
+    const [isLoading, setLoading] = useState(false);
+    const isFocused = useIsFocused();
+
+    const paragraphs = [ "Di sebuah desa kecil yang dikelilingi bukit hijau, tinggallah seorang anak bernama Lala. Ia adalah anak yang ceria dan sangat suka menjelajahi tempat-tempat baru. Setiap sore, Lala sering berjalan-jalan di dekat hutan bersama kelinci putih kesayangannya, Mimi.", "Suatu pagi, ketika sedang bermain di bawah pohon tua, Lala melihat sesuatu berkilauan di antara rerumputan. Ia mendekat dan menemukan sebuah kunci kecil berwarna emas. Lala mengangkatnya dan memperhatikan bentuknya dengan penuh rasa ingin tahu.", "Lala membawa kunci itu ke rumah dan menunjukkannya kepada Mimi. Kelinci kecil itu hanya memiringkan kepala seolah-olah juga sedang berpikir. Karena tidak mengetahui kegunaannya, Lala memutuskan untuk mencari tahu dari mana kunci tersebut berasal.", "Keesokan harinya, Lala dan Mimi pergi ke hutan. Mereka berjalan melewati jalan setapak yang dipenuhi daun kering dan bunga liar. Setelah berjalan cukup jauh, Lala melihat sesuatu yang aneh di balik semak-semak.", "Di sana terdapat sebuah pintu kecil yang menyatu dengan batang pohon besar. Pintu itu memiliki lubang kunci berbentuk seperti bintang. Lala segera menyadari bahwa kunci emas yang ditemukannya mungkin cocok dengan pintu tersebut.", "Dengan hati-hati, Lala memasukkan kunci ke dalam lubang. Terdengar suara klik yang lembut. Pintu perlahan terbuka dan memperlihatkan sebuah lorong panjang yang dipenuhi cahaya kebiruan.", "Lala menggandeng Mimi dan memasuki lorong tersebut. Di sepanjang jalan, mereka melihat bunga-bunga bercahaya dan kupu-kupu kecil yang terbang di udara. Semakin jauh mereka berjalan, semakin terang cahaya di depan mereka.", "Akhirnya, mereka tiba di sebuah taman yang sangat indah. Pohon-pohon di sana memiliki daun berwarna keemasan, tetapi sebagian besar bunganya tampak layu. Anehnya, taman yang begitu cantik itu terasa sangat sunyi.", "Tiba-tiba, seekor burung kecil terbang turun dan hinggap di sebuah ranting. Burung itu memandang Lala lalu berkata, \"Akhirnya ada manusia yang datang.\" Lala terkejut karena belum pernah mendengar burung berbicara sebelumnya.", "Burung itu memperkenalkan dirinya sebagai Piko, penjaga taman ajaib. Ia menjelaskan bahwa taman tersebut kehilangan sumber cahayanya setelah Batu Matahari menghilang. Jika batu itu tidak ditemukan, seluruh taman akan menjadi gelap.", "Lala merasa kasihan kepada Piko dan semua penghuni taman. Ia bertanya apakah ada cara untuk mendapatkan kembali Batu Matahari. Piko menjawab bahwa batu tersebut terakhir kali terlihat dibawa ke sebuah gua di balik Bukit Biru.", "Meskipun perjalanan menuju gua cukup jauh, Lala memutuskan untuk membantu. Mimi ikut bersamanya tanpa ragu. Piko kemudian memberikan sebuah daun bercahaya yang dapat digunakan sebagai penerang selama perjalanan.", "Mereka berjalan melewati sungai kecil, padang rumput, dan jembatan kayu tua. Di tengah perjalanan, mereka menemukan seekor anak tupai yang terjebak di antara dua batang pohon. Lala berhenti dan membantu membebaskannya.", "Anak tupai itu sangat berterima kasih dan menunjukkan jalan pintas menuju Bukit Biru. Berkat bantuan tersebut, Lala, Mimi, dan Piko dapat mencapai bukit lebih cepat. Di balik sebuah batu besar, mereka akhirnya menemukan pintu masuk sebuah gua.", "Gua itu sangat gelap dan licin. Lala menggunakan daun bercahaya dari Piko untuk menerangi jalan. Setelah berjalan cukup dalam, mereka melihat cahaya keemasan muncul dari balik bebatuan.", "Ternyata cahaya itu berasal dari Batu Matahari. Namun, batu tersebut berada di sebuah lubang yang cukup dalam. Lala harus berhati-hati agar tidak terpeleset ketika mengambilnya.", "Dengan bantuan Mimi dan Piko, Lala berhasil mengambil Batu Matahari. Mereka kemudian berjalan kembali keluar dari gua. Ketika sampai di taman, Lala segera menyerahkan batu itu kepada Piko.", "Piko meletakkan Batu Matahari di tempat semula. Seketika, cahaya keemasan menyebar ke seluruh taman. Bunga-bunga yang layu kembali bermekaran, pohon-pohon menjadi segar, dan para penghuni taman keluar untuk merayakan kembalinya cahaya.", "Sebagai tanda terima kasih, Piko memberikan Lala sebuah biji emas. Lala kemudian pulang bersama Mimi sebelum matahari terbenam. Ia menanam biji tersebut di halaman rumah dan merawatnya setiap hari. Beberapa minggu kemudian, tumbuhlah pohon kecil dengan bunga bercahaya yang mengingatkan Lala bahwa keberanian dan kebaikan selalu dapat membawa cahaya bagi orang lain." ];
+
+    useEffect(() => {
+        if (scroll > scrollRef.current) {
+            // ke bawah
+            if (top < 0 && scroll > 70) {
+                setTop(prev => prev + 10);
+            }
+        } else {
+            // ke atas 
+            if (top > -150) {
+                setTop(prev => prev - 10);
+            }
+        }
+        scrollRef.current = scroll;
+    }, [scroll, scrollRef]);
+
+    const load = async () => {
+        if (isLoading) return;
+
+        setLoading(true);
+        try {
+            setSales([]);
+            setRaw(null);
+
+            const response = await axios.get(`${config.base_url}/api/store/report/sales?start_date=${date.format('YYYY-MM-DD')}&end_date=${date.format('YYYY-MM-DD')}&page=${page}&user_id=${user?.id}`, {
+                headers: { Authorization: `Bearer ${user.token}`}
+            });
+            let res = response.data;
+
+            setSales(prev => [...prev, ...res.sales.data]);
+            setRaw(res.sales);
+            setOmset(res.omset);
+            setMargin(res.margin);
+            setVolume(res.volume);
+        } catch (err) {
+            console.error(err);
+            console.error(err?.response?.data);
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    useEffect(() => {
+        if (user !== null && isFocused) {
+            load();
+        }
+    }, [date, user, isFocused]);
+
+    if (!user) return null;
+
+    return (
+        <React.Fragment>
+            <ScrollView contentContainerStyle={styles.container} scrollEventThrottle={16} onScroll={e => {
+                let pos = e.nativeEvent.contentOffset.y;
+                setScroll(pos);
+            }} refreshControl={
+                <RefreshControl refreshing={false} onRefresh={() => {
+                    load();
+                }} />
+            }>
+                <Inline style={styles.top_area} gap={10}>
+                    <View style={{ flexGrow: 1, flexShrink: 1,gap: 5, }}>
+                        <Text color="#fff" size={12}>Halo,</Text>
+                        <Text color="#fff" size={20} style={{ fontWeight: '700' }}>{user.name}</Text>
+                    </View>
+                    {/* <Button color="#fff" style={{ height: 36,padding: 0,gap: 10 }}>
+                        <Ionicons name="calendar-outline" size={18} color={COLORS.primary} />
+                        <Text size={12} style={{ fontWeight: '600' }}>Absensi</Text>
+                    </Button> */}
+                    <Button circle color="#fff" onPress={() => {
+                        // navigation.replace('AuthNavigator', {
+                        //     screen: "Logout"
+                        // });
+                        
+                        navigation.navigate('CashierStoreSelector', {
+                            screen: "Logout"
+                        });
+                    }}>
+                        <Ionicons name="log-out-outline" size={18} color={COLORS.primary} />
+                    </Button>
+                    <Button circle color="#fff" onPress={() => {
+                        navigation.navigate('POSNavigator');
+                    }}>
+                        <Ionicons name="add" size={18} color={COLORS.primary} />
+                    </Button>
+                </Inline>
+
+                <View style={styles.content}>
+                    <View style={styles.inner}>
+                        <View style={{ padding: 20 }}>
+                            <Inline>
+                                <Text size={20} color={COLORS.slate[800]} style={{ fontWeight: '700' }}>Laporan</Text>
+                                <View style={{ flexGrow: 1 }} />
+                                <Inline gap={5} onPress={() => setShowCalendar(true)}>
+                                    <Text size={12} style={{ fontWeight: '600' }} color={COLORS.primary}>
+                                        { date.format('YYYY-MM-DD') === dayjs().format('YYYY-MM-DD') ?
+                                            'Hari Ini'
+                                        :
+                                            date.format('DD MMMM YYYY')
+                                        }
+                                    </Text>
+                                    <Ionicons name="chevron-down-outline" color={COLORS.primary} />
+                                </Inline>
+                            </Inline>
+                        </View>
+
+                        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.horizontal}>
+                            <View />
+                            <View style={styles.card}>
+                                <Text color={COLORS.slate[800]} size={12}>Omset</Text>
+                                <Text color={COLORS.primary} size={20} style={{ fontWeight: '700' }}>{Currency(omset).encode()}</Text>
+                            </View>
+                            <View style={styles.card}>
+                                <Text color={COLORS.slate[800]} size={12}>Penjualan</Text>
+                                <Text color={COLORS.primary} size={20} style={{ fontWeight: '700' }}>{volume[0]?.count ?? 0}</Text>
+                            </View>
+                            <View />
+                        </ScrollView>
+
+                        <View style={{ padding: 20,marginTop: 20 }}>
+                            <Inline gap={8}>
+                                <Text size={12}>Penjualan</Text>
+                                <View style={{ flexGrow: 1 }} />
+                                { page > 1 &&
+                                    <Button size={24} style={{ borderWidth: 1,borderColor: COLORS.primary }} color="#fff" circle>
+                                        <Ionicons name="chevron-back-outline" color={COLORS.primary} />
+                                    </Button>
+                                }
+                                { raw?.next_page_url != null &&
+                                    <Button size={24} style={{ borderWidth: 1,borderColor: COLORS.primary }} color="#fff" circle>
+                                        <Ionicons name="chevron-forward-outline" color={COLORS.primary} />
+                                    </Button>
+                                }
+                            </Inline>
+                            <View style={{ marginTop: 20,gap: 20}}>
+                                { sales.map((sale, s) => (
+                                    <Inline key={s} style={styles.item} alignItems="flex-start" onPress={() => {
+                                        navigation.navigate('CashierSalesDetail', {
+                                            sales: sale,
+                                        });
+                                    }}>
+                                        <View style={{ gap: 5,flexBasis: 10,flexGrow: 1,flexShrink: 1 }}>
+                                            <Text color={COLORS.slate[800]} style={{ fontWeight: '600' }}>{sale.invoice_number}</Text>
+                                            <View />
+                                            <Inline gap={10}>
+                                                <Ionicons name="cash-outline" color={COLORS.slate[500]} />
+                                                <Text size={12} color={COLORS.slate[500]} style={{ fontWeight: '500' }}>{Currency(sale.total_price).encode()}</Text>
+                                            </Inline>
+                                            <Inline gap={10}>
+                                                <Ionicons name="person-outline" color={COLORS.slate[500]} />
+                                                <Text size={12} color={COLORS.slate[500]} style={{ fontWeight: '500' }}>{sale.customer.name}</Text>
+                                            </Inline>
+                                        </View>
+                                        <Text size={11} color={COLORS.slate[400]} style={{ marginTop: 5 }}>
+                                            {dayjs(sale.created_at).fromNow()}
+                                        </Text>
+                                    </Inline>
+                                ))}
+                            </View>
+                        </View>
+                    </View>
+                </View>
+            </ScrollView>
+
+            <Inline style={{
+                ...styles.header,
+                top,
+            }}>
+                <Text>Header</Text>
+            </Inline>
+
+            { showCalendar &&
+                <Dialog visible={showCalendar} onClose={() => {
+                    setShowCalendar(false);
+                    setPage(1);
+                    load();
+                }}>
+                    <Dialog.Title>Pilih Tanggal Laporan</Dialog.Title>
+                    <Dialog.Body>
+                        <DateTimePicker
+                            styles={{
+                                ...pickerDefaultStyles,
+                                selected: {
+                                    backgroundColor: COLORS.primary,
+                                }
+                            }}
+                            date={date}
+                            onChange={theDate => {
+                                setDate(dayjs(theDate.date));
+                            }}
+                        />
+                    </Dialog.Body>
+                    <Dialog.Actions>
+                        <Button onPress={() => {
+                            setShowCalendar(false);
+                            setPage(1);
+                            load();
+                        }}>Pilih</Button>
+                    </Dialog.Actions>
+                </Dialog>
+            }
+        </React.Fragment>
+    )
+}
+
+const styles = StyleSheet.create({
+    container: {
+        flexGrow: 1,
+        backgroundColor: "#fff",
+    },
+    header: {
+        backgroundColor: "#fff",
+        position: 'absolute',
+        left: 0,right: 0,
+        padding: 20,
+        paddingTop: 65,
+        shadowColor: "#ddd",
+        shadowOffset: { width: 1,height: 1 },
+        shadowOpacity: 0.7,
+        shadowRadius: 10,
+        elevation: 3,
+    },
+    top_area: {
+        backgroundColor: COLORS.primary,
+        padding: 20,
+        paddingTop: 60,
+        paddingBottom: 40,
+    },
+    content: {
+        backgroundColor: "#fff"
+    },
+    inner: {
+        marginTop: -20,
+        backgroundColor: "#fff",
+        borderTopLeftRadius: 12,
+        borderTopRightRadius: 12,
+    },
+    horizontal: {
+        gap: 20,
+    },
+    card: {
+        minWidth: 55 / 100 * Dimensions.get('screen').width,
+        backgroundColor: `${COLORS.primary}20`,
+        padding: 20,
+        borderRadius: 12,
+        gap: 5,
+    },
+    item: {
+        padding: 20,
+        backgroundColor: "#fff",
+        borderRadius: 8,
+        shadowColor: "#ddd",
+        shadowOffset: { width: 1,height: 1},
+        shadowOpacity: 0.7,
+        shadowRadius: 10,
+        elevation: 3,
+    }
+});
+
+export default CashierHome;

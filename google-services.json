@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "278866245981",
+    "project_id": "takotoko",
+    "storage_bucket": "takotoko.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:278866245981:android:471212216ba2695a8410b4",
+        "android_client_info": {
+          "package_name": "com.takotoko.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "278866245981-3mm9db1vccnt2pi62r8hqv7f6r45ee1m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCrulWh4dTSZFYi0V6NafFVCqaSbvSjVo8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "278866245981-3mm9db1vccnt2pi62r8hqv7f6r45ee1m.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "278866245981-ho97fjr8elrsuhfru092u88e7cvsh0k1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.takotoko"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

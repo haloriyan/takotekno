@@ -1,0 +1,174 @@
+import React, { useEffect, useState } from "react";
+import { ActivityIndicator, RefreshControl, ScrollView, StyleSheet, View } from "react-native";
+import { Button, COLORS, Dialog, Inline, Text } from "ripal-ui";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
+import axios from "axios";
+import config from "../../../../config";
+import StateView from "../../Product/StateView";
+import { Feather, Ionicons } from "@expo/vector-icons";
+import useUser from "../../../../hooks/useUser";
+
+const Item = ({ customer, setCustomer, setDeleting, navigation, user = null }) => {
+    return (
+        <View style={styles.item}>
+            <View style={styles.item_inner}>
+                <Inline gap={15}>
+                    <View style={{ flexGrow: 1, flexShrink: 1, gap: 5, flexBasis: 10 }}>
+                        <Text style={{ fontWeight: '600' }}>{customer.name}</Text>
+                        <Text size={11} style={{ color: COLORS.primary, fontWeight: '500' }}>{customer.point} Points</Text>
+                    </View>
+
+                    <Inline gap={10}>
+                        <Button circle color={COLORS.primary} onPress={() => {
+                            navigation.navigate('OwnerMoreCustomerEdit', { customer: customer });
+                        }}>
+                            <Ionicons name="create-outline" color={'#fff'} size={18} />
+                        </Button>
+
+                        <Button circle color={COLORS.red[500]} onPress={() => {
+                            setCustomer(customer);
+                            setDeleting(true);
+                        }}>
+                            <Ionicons name="trash-outline" color={'#fff'} size={18} />
+                        </Button>
+                    </Inline>
+                </Inline>
+            </View>
+        </View>
+    )
+}
+
+const OwnerMoreCustomer = ({ user = null }) => {
+    const userHook = useUser();
+    const currentUser = user || userHook[0];
+    const isFocused = useIsFocused();
+    const [isLoading, setLoading] = useState(false);
+    const [isLoaded, setLoaded] = useState(false);
+    const [customers, setCustomers] = useState([]);
+    const [customer, setCustomer] = useState(null);
+    const navigation = useNavigation();
+
+    const [isDeleting, setDeleting] = useState(false);
+    const [isDeletingProc, setDeletingProc] = useState(false);
+
+    const load = async () => {
+        if (isLoading) return;
+        setLoading(true);
+
+        try {
+            const response = await axios.get(`${config.base_url}/api/store/customer`, {
+                headers: { Authorization: `Bearer ${currentUser.token}` }
+            });
+            let res = response.data;
+            setCustomers(res.customers.data);
+        } catch (err) {
+            console.error(err);
+            console.error(err?.response?.data);
+        } finally {
+            setLoading(false);
+            setLoaded(true);
+        }
+    }
+
+    useEffect(() => {
+        if (isFocused && currentUser !== null) {
+            load();
+        }
+    }, [currentUser, isFocused]);
+
+    useEffect(() => {
+        navigation.setOptions({
+            headerRight: () => (
+                <Button circle onPress={() => navigation.navigate('OwnerMoreCustomerAdd')}>
+                    <Ionicons name="add" color={'#fff'} size={20} />
+                </Button>
+            )
+        })
+    }, []);
+
+    const del = async () => {
+        if (isDeletingProc) return;
+        setDeletingProc(true);
+
+        try {
+            await axios.get(`${config.base_url}/api/store/customer/${customer.id}/delete`, {
+                headers: { Authorization: `Bearer ${currentUser.token}` }
+            });
+            
+            load();
+            setDeleting(false);
+            setCustomer(null);
+        } catch (err) {
+            console.error(err);
+            console.error(err?.response?.data);
+        } finally {
+            setDeletingProc(false);
+        }
+    }
+
+    return (
+        <React.Fragment>
+            { isLoaded && customers.length === 0 &&
+                <StateView 
+                    icon={<Feather name="users" size={128} color={COLORS.primary} />}
+                    title={"Belum ada pelanggan."}
+                    action={
+                        <Button onPress={() => navigation.navigate('OwnerMoreCustomerAdd')}>Tambahkan</Button>
+                    }
+                />
+            }
+            { isLoaded && customers.length > 0 &&
+                <ScrollView contentContainerStyle={styles.container} refreshControl={
+                    <RefreshControl refreshing={isLoading} onRefresh={async () => {
+                        await load();
+                    }} />
+                }>
+                    { customers.map((cust) => (
+                        <Item 
+                            key={cust.id} customer={cust} 
+                            setCustomer={setCustomer} setDeleting={setDeleting} 
+                            navigation={navigation} 
+                            user={currentUser}
+                        />
+                    ))}
+                </ScrollView>
+            }
+
+            { customer !== null &&
+                <Dialog visible={isDeleting} onClose={() => setDeleting(false)}>
+                    <Dialog.Title>
+                        <Text size={16} style={{ fontWeight: '600' }}>Hapus {customer.name}</Text>
+                    </Dialog.Title>
+                    <Dialog.Body>
+                        <Text>Yakin ingin menghapus {customer.name}?</Text>
+                    </Dialog.Body>
+                    <Dialog.Actions>
+                        { isDeletingProc ? <ActivityIndicator color={'#fff'} /> : <Button color={COLORS.red[500]} onPress={del}>Hapus</Button>}
+                    </Dialog.Actions>
+                </Dialog>
+            }
+        </React.Fragment>
+    )
+}
+
+const styles = StyleSheet.create({
+    container: {
+        padding: 20,
+        flexGrow: 1,
+        backgroundColor: "#fff",
+        gap: 0,
+    },
+    item: {
+        backgroundColor: "#fff",
+        // shadowColor: "#ddd",
+        // shadowOffset: { width: 1, height: 1 },
+        // shadowOpacity: 0.7,
+        // shadowRadius: 10,
+        borderRadius: 20,
+    },
+    item_inner: {
+        padding: 20,
+    },
+});
+
+export default OwnerMoreCustomer;
