@@ -11,7 +11,7 @@ import { useIsFocused } from "@react-navigation/native";
 import Scanner from "./Scanner";
 import StateView from "../Owner/Product/StateView";
 import { SafeAreaView } from "react-native-safe-area-context";
-// import POSPrint from "./Print";
+import POSPrint from "./Print";
 
 const POSHome = ({ navigation, route }) => {
     const { width } = useWindowDimensions();
@@ -319,10 +319,10 @@ const POSHome = ({ navigation, route }) => {
             }
             { isPrinting &&
                 <>
-                {/* <POSPrint 
+                <POSPrint 
                     sales={sales}
                     isPrinting={isPrinting} setPrinting={setPrinting}
-                /> */}
+                />
                 </>
             }
         </React.Fragment>

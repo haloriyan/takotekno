@@ -11,11 +11,12 @@ import {
 import {
 	BLEPrinter
 } from 'react-native-thermal-receipt-printer-image-qr';
-import { Text, BottomSheet, Inline, Button, COLORS } from 'ripal-ui';
+import { Text, BottomSheet, Inline, Button, COLORS, Dialog } from 'ripal-ui';
 import { Ionicons } from '@expo/vector-icons';
 import dayjs from 'dayjs';
 import LocalStore from '../../lib/LocalStore';
 import Currency from '../../lib/Currency';
+import config from '../../config';
 
 const { width } = Dimensions.get('window');
 
@@ -30,17 +31,6 @@ const POSPrint = ({ sales, isPrinting, setPrinting }) => {
 	const connectedRef = useRef(null);
 	const printerReadyRef = useRef(false);
 
-	const ensurePrinterReady = async () => {
-		if (!BLEPrinter || typeof BLEPrinter.init !== 'function') {
-			throw new Error('Bluetooth printer library not available');
-		}
-
-		if (!printerReadyRef.current) {
-			await BLEPrinter.init();
-			printerReadyRef.current = true;
-		}
-	};
-
 	useEffect(() => {
 		const getDefaultPrinter = async () => {
 			// let def = await AsyncStorage.getItem('default_printer');
@@ -53,11 +43,9 @@ const POSPrint = ({ sales, isPrinting, setPrinting }) => {
 
 	useEffect(() => {
 		const getAutoPrint = async () => {
-			// let def = await AsyncStorage.getItem('auto_print');
-			let def = await LocalStore.getItem('auto_print');
-			// setAutoPrint(JSON.parse(def));
-			setAutoPrint(def);
-		}
+			const def = await LocalStore.getItem('auto_print');
+			setAutoPrint(def === true || def === 'true');
+		};
 
 		getAutoPrint();
 	}, []);
@@ -69,18 +57,71 @@ const POSPrint = ({ sales, isPrinting, setPrinting }) => {
 	}, [defaultPrinter, autoPrint]);
 
 	const requestBluetoothPermissions = async () => {
-		if (Platform.OS === 'android' && Platform.Version >= 31) {
-			await PermissionsAndroid.requestMultiple([
+		if (Platform.OS !== 'android') {
+			return true;
+		}
+
+		if (Platform.Version < 23) {
+			return true;
+		}
+
+		const permissions = Platform.Version >= 31
+			? [
 				PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
 				PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN,
+			]
+			: [
 				PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-			]);
+			];
+
+		try {
+			const results = await PermissionsAndroid.requestMultiple(permissions);
+
+			console.log('[Printer] Permission results:', results);
+
+			const permanentlyDenied = permissions.some(
+				permission =>
+					results[permission] === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN
+			);
+
+			if (permanentlyDenied) {
+				ToastAndroid.show(
+					'Enable Nearby devices permission in app settings',
+					ToastAndroid.LONG
+				);
+				return false;
+			}
+
+			return permissions.every(
+				permission =>
+					results[permission] === PermissionsAndroid.RESULTS.GRANTED
+			);
+		} catch (error) {
+			console.warn('[Printer] Permission request failed:', error);
+			return false;
+		}
+	};
+
+	const ensurePrinterReady = async () => {
+		if (!BLEPrinter || typeof BLEPrinter.init !== 'function') {
+			throw new Error('Bluetooth printer library not available');
+		}
+
+		// Always request/check permission before accessing native Bluetooth APIs.
+		const hasPermission = await requestBluetoothPermissions();
+
+		if (!hasPermission) {
+			throw new Error('Bluetooth permissions denied');
+		}
+
+		if (!printerReadyRef.current) {
+			await BLEPrinter.init();
+			printerReadyRef.current = true;
 		}
 	};
 
 	useEffect(() => {
 		(async () => {
-			await requestBluetoothPermissions();
 			try {
 				await ensurePrinterReady();
 			} catch (e) {
@@ -102,37 +143,76 @@ const POSPrint = ({ sales, isPrinting, setPrinting }) => {
 		]);
 	};
 
+		
 	const scanDevices = async () => {
 		setName('');
 		setLoading(true);
 
 		try {
+			console.log('[Printer] 1. Scan started');
+
+			const hasPermission = await requestBluetoothPermissions();
+
+			if (!hasPermission) {
+				console.warn('[Printer] Bluetooth permission denied');
+				ToastAndroid.show(
+					'Bluetooth permission is required',
+					ToastAndroid.LONG
+				);
+				return;
+			}
+
+			console.log('[Printer] Bluetooth permissions granted');
+
 			await ensurePrinterReady();
+			console.log('[Printer] 2. Printer ready');
+
 			const devices = await BLEPrinter.getDeviceList();
-			setFoundDevices(devices || []);
-			devices.map((dev, d) => {
+			console.log('[Printer] 3. Devices:', devices);
+			console.log('[Printer] 4. Default printer:', defaultPrinter);
+
+			const foundDevices = devices || [];
+			setFoundDevices(foundDevices);
+
+			foundDevices.forEach((dev) => {
+				console.log('[Printer] Device:', dev);
+				console.log(
+					'[Printer] MAC:',
+					dev.inner_mac_address,
+					'Expected:',
+					defaultPrinter
+				);
+
 				if (dev.inner_mac_address === defaultPrinter) {
+					console.log('[Printer] Matching printer found');
 					connectDevice(dev);
 				}
-			})
+			});
 		} catch (e) {
-			console.warn('Scan failed', e);
-			ToastAndroid.show('Scan failed', ToastAndroid.SHORT);
+			console.warn('[Printer] Scan failed:', e);
+			ToastAndroid.show(
+				e.message || 'Scan failed',
+				ToastAndroid.SHORT
+			);
+		} finally {
+			setLoading(false);
+			console.log('[Printer] 5. Scan finished');
 		}
-		setLoading(false);
 	};
 
+
 	useEffect(() => {
-		console.log('effext');
+		console.log('effext', {
+			autoPrint,
+			autoPrintType: typeof autoPrint,
+			boundAddress,
+		});
 
 		if (autoPrint === true && boundAddress) {
-			console.log('effext');
-			console.log('autoprint', autoPrint);
-			console.log('addr', boundAddress);
-			
+			console.log('effext2');
 			printStruk();
 		}
-	}, [autoPrint, boundAddress, connectedRef]);
+	}, [autoPrint, boundAddress]);
 
 	const connectDevice = async (device) => {
 		setLoading(true);
@@ -201,17 +281,17 @@ const POSPrint = ({ sales, isPrinting, setPrinting }) => {
 			const staffName = sales.user?.name ?? '-';
 			const customerName = sales.customer?.name ?? '-';
 			const createdAt = sales.created_at ? dayjs(sales.created_at).format('DD MMM YYYY - HH:mm:ss') : '';
-
-			let receipt = centerText(`Nasi Goreng Master - ${branchName}`);
+			
+			let receipt = centerText(`${sales.store.name}`);
 			receipt += `${centerText(branchAddress)}\n`;
+			receipt += `${centerText(invoice)}\n`;
 			receipt += `--------------------------------\n`;
-			receipt += `No. \t  : ${invoice}\n`;
-			receipt += `Staf      : ${staffName}\n`;
-			receipt += `Pelanggan : ${customerName}\n\n`;
+			receipt += `Staf : ${staffName}\n`;
+			receipt += `Cust : ${customerName}\n\n`;
 			receipt += centerText(createdAt) + '\n';
 
 			// send header with timeout guard
-			await withTimeout(safePrint(receipt), 10000);
+			await withTimeout(safePrint(receipt), 2000);
 
 			for (const item of sales.items) {
 				const productName = item.product?.name || 'Unknown Product';
@@ -240,14 +320,32 @@ const POSPrint = ({ sales, isPrinting, setPrinting }) => {
 			let footer = `--------------------------------\n`;
 			footer += `Total Qty : ${sales.total_quantity ?? 0}\n`;
 			footer += `Total     : ${Currency(sales.total_price ?? 0).encode()}\n`;
-			footer += `\n\n\n`;
 
-			await withTimeout(safePrint(footer), 10000);
+			await withTimeout(safePrint(footer), 2000);
+
+			const qrString = `${config.base_url}/receipt/${encodeURIComponent(invoice)}?customer_id=${sales.customer_id}`;
+			const qrImageUrl = `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(qrString)}&size=200x200&ecc=M&margin=4`;
+
+			if (typeof BLEPrinter.printImage === 'function') {
+				BLEPrinter.printImage(qrImageUrl, {
+					imageWidth: 200,
+					paddingX: 0,
+				});
+
+				// Allow time for image processing and Bluetooth transmission.
+				await delay(3000);
+
+				// Feed paper only after giving the image time to print.
+				await withTimeout(safePrint('\n\n'), 500);
+				await delay(500);
+			} else {
+				console.warn('[Printer] printImage is not available');
+			}
 
 			// try to close connection (best-effort)
 			try {
 				if (BLEPrinter.closeConn) {
-					await withTimeout(BLEPrinter.closeConn(), 5000);
+					await withTimeout(BLEPrinter.closeConn(), 1000);
 				}
 			} catch (e) {
 				console.warn('Failed to close connection', e);
@@ -300,66 +398,69 @@ const POSPrint = ({ sales, isPrinting, setPrinting }) => {
 	};
 
 	return (
-		<BottomSheet visible={isPrinting} onClose={() => setPrinting(false)}>
-			{
-				autoPrint === true ?
-				<Inline justifyContent='center'>
-					<ActivityIndicator size={32} />
-				</Inline>
-				:
-				<>
-				<Inline justifyContent="flex-end">
-					<Inline style={{ flexGrow: 1 }}>
-						<Ionicons name="print-outline" color={COLORS.slate[700]} size={32} />
-						<Text size={12}>{name === '' ? 'Belum Terhubung' : name}</Text>
-					</Inline>
-					{loading ? (
-						<ActivityIndicator />
-					) : (
-						<Inline gap={10} onPress={scanDevices} style={{padding: 8}}>
-							<Ionicons name="sync-outline" />
-							<Text size={11}>Scan</Text>
-						</Inline>
-					)}
-				</Inline>
-
+		<Dialog visible={isPrinting} onClose={() => setPrinting(false)}>
+			<Dialog.Title>Print Struk</Dialog.Title>
+			<Dialog.Body>
 				{
-					autoPrint !== true &&
-					<View style={styles.list_area}>
-						{foundDevices?.map((device, d) => {
-							if (device.device_name) {
-								return (
-									<Inline key={d} onPress={() => connectDevice(device)}>
-										<Text
-											style={{ flexGrow: 1 }}
-											weight="600SemiBold"
-											color={COLORS.slate[700]}
-										>
-											{device.device_name || 'Tanpa Nama'}
-										</Text>
-										<Text size={11}>{device.inner_mac_address}</Text>
-									</Inline>
-								);
-							}
-							return null;
-						})}
-					</View>
-				}
+					autoPrint === true ?
+					<Inline justifyContent='center'>
+						<ActivityIndicator size={32} />
+					</Inline>
+					:
+					<>
+					<Inline justifyContent="flex-end">
+						<Inline style={{ flexGrow: 1 }}>
+							<Ionicons name="print-outline" color={COLORS.slate[700]} size={32} />
+							<Text size={12}>{name === '' ? 'Belum Terhubung' : name}</Text>
+						</Inline>
+						{loading ? (
+							<ActivityIndicator />
+						) : (
+							<Inline gap={10} onPress={scanDevices} style={{padding: 8}}>
+								<Ionicons name="sync-outline" />
+								<Text size={11}>Scan</Text>
+							</Inline>
+						)}
+					</Inline>
 
-				{(name !== '') && (
-					<Button onPress={printStruk}>
-						Print Struk
-					</Button>
-				)}
-				</>
-			}
-		</BottomSheet>
+					{
+						autoPrint !== true &&
+						<View style={styles.list_area}>
+							{foundDevices?.map((device, d) => {
+								if (device.device_name) {
+									return (
+										<Inline key={d} onPress={() => connectDevice(device)}>
+											<Text
+												style={{ flexGrow: 1 }}
+												weight="600SemiBold"
+												color={COLORS.slate[700]}
+											>
+												{device.device_name || 'Tanpa Nama'}
+											</Text>
+											<Text size={11}>{device.inner_mac_address}</Text>
+										</Inline>
+									);
+								}
+								return null;
+							})}
+						</View>
+					}
+
+					{(name !== '') && (
+						<Button onPress={printStruk}>
+							Print Struk
+						</Button>
+					)}
+					</>
+				}
+			</Dialog.Body>
+		</Dialog>
 	);
 };
 
 const styles = StyleSheet.create({
 	list_area: {
-		marginVertical: 15,
+		// marginVertical: 15,
 		gap: 18
 	}
 });

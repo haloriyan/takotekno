@@ -1,7 +1,7 @@
 const config = {
-    // base_url: "https://takotoko.com",
-    base_url: "http://10.10.101.236:8000",
-    dev: true,
+    base_url: "https://takotoko.com",
+    // base_url: "http://10.10.101.24:8000",
+    dev: false,
     gkeys: [
         "AQ.Ab8RN6JvzjpigWyoHEyFaA9LakGSMr-N6Xi9LrPbZUi2x_hXew",
         "AIzaSyAUPmIOvA4QxJsw9F95K_UJUrhhw5zjDoc",

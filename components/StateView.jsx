@@ -2,9 +2,12 @@ import React from "react";
 import { StyleSheet, View } from "react-native";
 import { Text } from "ripal-ui";
 
-const StateView = ({ title, body = null, action = null, icon = null }) => {
+const StateView = ({ title, body = null, action = null, icon = null, gap=  20 }) => {
     return (
-        <View style={errorStyles.area}>
+        <View style={{
+            ...errorStyles.area,
+            gap,
+        }}>
             { icon !== null && 
                 <>
                 {icon}

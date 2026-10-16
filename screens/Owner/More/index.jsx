@@ -97,14 +97,14 @@ const OwnerMore = ({ navigation, route }) => {
                                 <View style={{ flexGrow: 1 }} />
                                 <MaterialIcons name="chevron-right" size={20} color={COLORS.slate[400]} />
                             </Inline>
-                            <Inline gap={10} style={styles.group_item} onPress={() => {
+                            {/* <Inline gap={10} style={styles.group_item} onPress={() => {
                                 navigation.navigate('OwnerMoreSupplier')
                             }}>
                                 <Feather name="truck" size={20} />
                                 <Text size={14} color={COLORS.slate[800]} style={{ fontWeight: '500' }}>Supplier</Text>
                                 <View style={{ flexGrow: 1 }} />
                                 <MaterialIcons name="chevron-right" size={20} color={COLORS.slate[400]} />
-                            </Inline>
+                            </Inline> */}
                             <Inline gap={10} style={styles.group_item} onPress={() => {
                                 navigation.navigate('OwnerMoreEmployee');
                             }}>
@@ -121,15 +121,7 @@ const OwnerMore = ({ navigation, route }) => {
                                 <View style={{ flexGrow: 1 }} />
                                 <MaterialIcons name="chevron-right" size={20} color={COLORS.slate[400]} />
                             </Inline>
-                        </View>
-                    </View>
 
-                    <View style={styles.group}>
-                        <Inline gap={10}>
-                            <Ionicons name="bar-chart-outline" />
-                            <Text size={12}>Berkembang</Text>
-                        </Inline>
-                        <View style={styles.group_card}>
                             <Inline gap={10} style={styles.group_item} onPress={() => {
                                 navigation.navigate('OwnerMoreCustomer');
                             }}>
@@ -148,6 +140,15 @@ const OwnerMore = ({ navigation, route }) => {
                             </Inline>
                         </View>
                     </View>
+
+                    {/* <View style={styles.group}>
+                        <Inline gap={10}>
+                            <Ionicons name="bar-chart-outline" />
+                            <Text size={12}>Berkembang</Text>
+                        </Inline>
+                        <View style={styles.group_card}>
+                        </View>
+                    </View> */}
 
                     {/* <View style={styles.group}>
                         <Inline gap={10}>

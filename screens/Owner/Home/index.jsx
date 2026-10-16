@@ -14,6 +14,7 @@ import OwnerHomeCustomer from "./Customer";
 import LocalStore from "../../../lib/LocalStore";
 import { useIsFocused } from "@react-navigation/native";
 import * as WebBrowser from "expo-web-browser";
+import StateView from "../../../components/StateView";
 
 const OwnerHome = ({ navigation, route }) => {
     const [scroll, setScroll] = useState(0);
@@ -168,32 +169,47 @@ const OwnerHome = ({ navigation, route }) => {
                     <Text size={14} style={{ fontWeight: '700' }}>Produk Terlaris</Text>
                 </View>
 
-                <View>
-                    <ScrollView horizontal contentContainerStyle={{ gap: 20 }} showsHorizontalScrollIndicator={false}>
-                        <View />
-                        { highestVolume.map((item, i) => (
-                            <Pressable key={i} style={styles.product_card}>
-                                <Image 
-                                    style={styles.product_card_image}
-                                    source={{
-                                        uri: `${config.base_url}/storage/${item.product.store_id}/product_images/${item.product_id}/${item.product.images[0].filename}`
-                                    }}
-                                />
-                                <Inline gap={10}>
-                                    <Text style={{ fontWeight: '700',flexGrow: 1,flexShrink: 1,flexBasis: 100 }}>{item.product.name}</Text>
-                                    <Text size={16} color={COLORS.primary} style={{ fontWeight: '600' }}>{item.total_quantity}x</Text>
-                                </Inline>
-                            </Pressable>
-                        ))}
-                        <View />
-                    </ScrollView>
-                </View>
+                { highestVolume.length === 0 ?
+                    <View style={{ paddingVertical: 20,paddingTop: 35 }}>
+                        <StateView
+                            icon={
+                                <Button circle size={64}>
+                                    <Ionicons name="bag-outline" size={28} color={'#fff'} />
+                                </Button>
+                            }
+                            title={'Belum ada data'}
+                            body={'Tidak ada transaksi hari ini.'}
+                            gap={10}
+                        />
+                    </View>
+                    :
+                    <View>
+                        <ScrollView horizontal contentContainerStyle={{ gap: 20 }} showsHorizontalScrollIndicator={false}>
+                            <View />
+                            { highestVolume.map((item, i) => (
+                                <Pressable key={i} style={styles.product_card}>
+                                    <Image 
+                                        style={styles.product_card_image}
+                                        source={{
+                                            uri: `${config.base_url}/storage/${item.product.store_id}/product_images/${item.product_id}/${item.product.images[0].filename}`
+                                        }}
+                                    />
+                                    <Inline gap={10}>
+                                        <Text style={{ fontWeight: '700',flexGrow: 1,flexShrink: 1,flexBasis: 100 }}>{item.product.name}</Text>
+                                        <Text size={16} color={COLORS.primary} style={{ fontWeight: '600' }}>{item.total_quantity}x</Text>
+                                    </Inline>
+                                </Pressable>
+                            ))}
+                            <View />
+                        </ScrollView>
+                    </View>
+                }
 
                 <View style={{ height: 20 }} />
                 <View style={{...styles.pad, gap: 20}}>
                     <View style={{ gap: 4 }}>
                         <Text size={14} style={{ fontWeight: '700' }}>Waktu Paling Ramai</Text>
-                        <Text size={11} color={COLORS.slate[500]}>Berdasarkan riwayat transaksi di hari ini.</Text>
+                        <Text size={11} color={COLORS.slate[500]}>Berdasarkan riwayat transaksi 7 hari terakhir.</Text>
                     </View>
 
                     {hours.length > 0 && (

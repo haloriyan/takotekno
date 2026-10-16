@@ -9,6 +9,7 @@ import Currency from "../../../../lib/Currency";
 import dayjs from "dayjs";
 import PaymentStatus from "../../../../components/PaymentStatus";
 import { useToast } from "react-native-toast-notifications";
+import POSPrint from "../../../POS/Print";
 
 const OwnerReportSalesDetail = ({ navigation, route }) => {
     const [sales, setSales] = useState(route.params.sales);
@@ -16,6 +17,7 @@ const OwnerReportSalesDetail = ({ navigation, route }) => {
     const [isLoading, setLoading] = useState(false);
     const [status, setStatus] = useState(sales.payment_status);
     const toast = useToast();
+    const [isPrinting, setPrinting] = useState(false);
 
     const load = async () => {
         if (isLoading) return;
@@ -34,6 +36,20 @@ const OwnerReportSalesDetail = ({ navigation, route }) => {
             setLoading(false);
         }
     }
+
+    useEffect(() => {
+        navigation.setOptions({
+            headerRight: () => (
+                <Button circle onPress={() => {
+                    setPrinting(true);
+                    console.log(JSON.stringify(Object.keys(sales)));
+                    
+                }}>
+                    <Ionicons name="print-outline" color={'#fff'} size={18} />
+                </Button>
+            )
+        })
+    }, [sales]);
 
     useEffect(() => {
         if (user !== null) {
@@ -195,6 +211,14 @@ const OwnerReportSalesDetail = ({ navigation, route }) => {
                         <Button color={COLORS.green[500]} onPress={acceptOrder}>{isAcceptingProc ? <ActivityIndicator color={'#fff'} size={12} /> : 'Terima'}</Button>
                     </Dialog.Actions>
                 </Dialog>
+            }
+            { isPrinting &&
+                <>
+                <POSPrint 
+                    sales={sales}
+                    isPrinting={isPrinting} setPrinting={setPrinting}
+                />
+                </>
             }
         </React.Fragment>
     )
